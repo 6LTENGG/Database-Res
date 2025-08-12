@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tables - Thai Restaurant</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Tables</h1>
+      <nav>
+        <a href="/">Home</a> | <a href="/orders">Orders</a>
+      </nav>
+    </header>
+
+    <main>
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>Table Number</th>
+            <th>Capacity</th>
+            <th>Status</th>
+            <th>Update Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% tables.forEach(table => { %>
+            <tr>
+              <td><%= table.table_number %></td>
+              <td><%= table.capacity %></td>
+              <td>
+                <span class="status <%= table.status %>"><%= table.status.charAt(0).toUpperCase() + table.status.slice(1) %></span>
+              </td>
+              <td>
+                <form method="POST" action="/tables/<%= table.table_id %>/status" class="status-form">
+                  <select name="status" required>
+                    <option value="" disabled>Select</option>
+                    <option value="available" <%= table.status === 'available' ? 'selected' : '' %>>Available</option>
+                    <option value="occupied" <%= table.status === 'occupied' ? 'selected' : '' %>>Occupied</option>
+                    <option value="reserved" <%= table.status === 'reserved' ? 'selected' : '' %>>Reserved</option>
+                  </select>
+                  <button type="submit">Update</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; <%= new Date().getFullYear() %> Thai Restaurant | Made with ❤️</p>
+    </footer>
+  </div>
+</body>
+</html>

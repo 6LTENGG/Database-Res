@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orders - Thai Restaurant</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Orders</h1>
+      <nav>
+        <a href="/">Home</a> | <a href="/tables">Tables</a>
+      </nav>
+    </header>
+
+    <main>
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Table Number</th>
+            <th>Details</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+            <th>Update Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% orders.forEach(order => { %>
+            <tr>
+              <td><%= order.order_id %></td>
+              <td><%= order.table_id %></td>
+              <td><%= order.order_details %></td>
+              <td>฿<%= order.total_amount %></td>
+              <td>
+                <span class="status <%= order.status %>"><%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %></span>
+              </td>
+              <td>
+                <form method="POST" action="/orders/<%= order.order_id %>/status" class="status-form">
+                  <select name="status" required>
+                    <option value="" disabled>Select</option>
+                    <option value="queued" <%= order.status === 'queued' ? 'selected' : '' %>>Queued</option>
+                    <option value="preparing" <%= order.status === 'preparing' ? 'selected' : '' %>>Preparing</option>
+                    <option value="ready" <%= order.status === 'ready' ? 'selected' : '' %>>Ready</option>
+                    <option value="served" <%= order.status === 'served' ? 'selected' : '' %>>Served</option>
+                    <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+                  </select>
+                  <button type="submit">Update</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <section class="new-order">
+        <h2>Create New Order</h2>
+        <form method="POST" action="/orders" class="order-form">
+          <label for="table_id">Table Number</label>
+          <input type="number" id="table_id" name="table_id" required />
+
+          <label for="order_details">Order Details</label>
+          <textarea id="order_details" name="order_details" rows="3" required></textarea>
+
+          <label for="total_amount">Total Amount (฿)</label>
+          <input type="number" id="total_amount" name="total_amount" step="0.01" required />
+
+          <button type="submit">Add Order</button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; <%= new Date().getFullYear() %> Thai Restaurant | Made with ❤️</p>
+    </footer>
+  </div>
+</body>
+</html>

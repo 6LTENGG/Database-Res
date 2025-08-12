@@ -1,0 +1,218 @@
+/* Reset and base */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f9fafb;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+.container {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 0.2rem;
+}
+
+.tagline {
+  font-weight: 300;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+nav a {
+  color: #3498db;
+  text-decoration: none;
+  margin: 0 0.5rem;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #2980b9;
+}
+
+/* Card grid for index */
+.card-grid {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgb(0 0 0 / 0.05);
+  text-align: center;
+  width: 250px;
+  text-decoration: none;
+  color: #2c3e50;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 12px 30px rgb(0 0 0 / 0.1);
+}
+
+.card h2 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  font-weight: 300;
+  color: #7f8c8d;
+}
+
+/* Modern Table */
+.modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 1rem;
+}
+
+.modern-table thead tr th {
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 600;
+  color: #34495e;
+}
+
+.modern-table tbody tr {
+  background: white;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 0.05);
+  border-radius: 12px;
+  transition: background-color 0.2s;
+}
+
+.modern-table tbody tr:hover {
+  background-color: #f0f8ff;
+}
+
+.modern-table tbody tr td {
+  padding: 12px 16px;
+  vertical-align: middle;
+  border: none;
+}
+
+/* Status badges */
+.status {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+  color: white;
+}
+
+.status.available {
+  background-color: #27ae60; /* green */
+}
+
+.status.occupied {
+  background-color: #e74c3c; /* red */
+}
+
+.status.reserved {
+  background-color: #f39c12; /* orange */
+}
+
+.status.queued {
+  background-color: #2980b9; /* blue */
+}
+
+.status.preparing {
+  background-color: #8e44ad; /* purple */
+}
+
+.status.ready {
+  background-color: #16a085; /* teal */
+}
+
+.status.served {
+  background-color: #2ecc71; /* light green */
+}
+
+.status.cancelled {
+  background-color: #95a5a6; /* grey */
+}
+
+/* Forms */
+.status-form select,
+.order-form input[type="number"],
+.order-form textarea,
+.order-form select {
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.status-form select:focus,
+.order-form input[type="number"]:focus,
+.order-form textarea:focus,
+.order-form select:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.status-form button,
+.order-form button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.status-form button:hover,
+.order-form button:hover {
+  background-color: #2980b9;
+}
+
+/* New order form */
+.new-order {
+  margin-top: 3rem;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgb(0 0 0 / 0.05);
+}
+
+.new-order h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.new-order label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+  color: #34495e;
+}
