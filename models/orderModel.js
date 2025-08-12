@@ -3,7 +3,6 @@ const db = require("../config/db.js");
 const Order = {
   // READ all
   getAllOrders: (callback) => {
-    // Joining tables table_number for display
     const query = `
       SELECT orders.*, tables.table_number 
       FROM orders 

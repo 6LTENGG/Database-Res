@@ -10,7 +10,7 @@
   <div class="container">
     <header class="header">
       <h1>Tables</h1>
-      <nav>
+      <nav aria-label="Main navigation">
         <a href="/">Home</a> | <a href="/orders">Orders</a>
       </nav>
     </header>
@@ -31,13 +31,12 @@
               <td data-label="Number"><%= table.table_number %></td>
               <td data-label="Capacity"><%= table.capacity %></td>
               <td data-label="Status">
-                <span class="status <%= table.status %>"><%= table.status %></span>
+                <span class="status <%= table.status %>"><%= table.status.charAt(0).toUpperCase() + table.status.slice(1) %></span>
               </td>
               <td data-label="Actions">
-                
-
                 <form method="POST" action="/tables/<%= table.table_id %>/status" class="status-form" style="display:inline-flex; align-items:center; gap: 0.5rem;">
-                  <select name="status" class="status-select">
+                  <label for="status-<%= table.table_id %>" class="sr-only">Update table status</label>
+                  <select id="status-<%= table.table_id %>" name="status" class="status-select">
                     <option value="available" <%= table.status === 'available' ? 'selected' : '' %>>Available</option>
                     <option value="occupied" <%= table.status === 'occupied' ? 'selected' : '' %>>Occupied</option>
                     <option value="reserved" <%= table.status === 'reserved' ? 'selected' : '' %>>Reserved</option>
@@ -58,10 +57,12 @@
       <section class="new-order">
         <h2>Create New Table</h2>
         <form method="POST" action="/tables" class="order-form">
-          <label>Table Number</label>
-          <input type="text" name="table_number" required />
-          <label>Capacity</label>
-          <input type="number" name="capacity" required />
+          <label for="table_number">Table Number</label>
+          <input type="text" id="table_number" name="table_number" required />
+          
+          <label for="capacity">Capacity</label>
+          <input type="number" id="capacity" name="capacity" min="1" required />
+          
           <button type="submit">Add Table</button>
         </form>
       </section>
@@ -69,3 +70,4 @@
   </div>
 </body>
 </html>
+        

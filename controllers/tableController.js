@@ -1,6 +1,6 @@
+// controllers/tableController.js
 const Table = require("../models/tableModel");
 
-// READ all tables
 exports.showTables = (req, res) => {
   Table.getAllTables((err, tables) => {
     if (err) {
@@ -11,22 +11,9 @@ exports.showTables = (req, res) => {
   });
 };
 
-// READ single table by ID
-exports.getTableById = (req, res) => {
-  const tableId = req.params.id;
-  Table.getTableById(tableId, (err, table) => {
-    if (err) {
-      console.error("Error fetching table:", err);
-      return res.status(500).send("Database error: " + err.message);
-    }
-    if (!table) return res.status(404).send("Table not found");
-    res.render("tableDetails", { table });
-  });
-};
-
-// CREATE new table
 exports.createTable = (req, res) => {
   const { table_number, capacity } = req.body;
+  console.log("Received create table:", req.body);  // Debug log
   Table.addTable(table_number, capacity, (err) => {
     if (err) {
       console.error("Error creating table:", err);
@@ -36,7 +23,6 @@ exports.createTable = (req, res) => {
   });
 };
 
-// UPDATE table status
 exports.updateTableStatusRedirect = (req, res) => {
   const tableId = req.params.id;
   const newStatus = req.body.status;
@@ -49,9 +35,9 @@ exports.updateTableStatusRedirect = (req, res) => {
   });
 };
 
-// DELETE table
 exports.deleteTable = (req, res) => {
-  Table.deleteTable(req.params.id, (err) => {
+  const tableId = req.params.id;
+  Table.deleteTable(tableId, (err) => {
     if (err) {
       console.error("Error deleting table:", err);
       return res.status(500).send("Database error: " + err.message);

@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Table Details</title>
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-<div class="container">
-  <header class="header">
-    <h1>Table <%= table.table_number %></h1>
-    <nav>
-      <a href="/tables">Back to Tables</a>
-    </nav>
-  </header>
-  <main>
-    <p><strong>Capacity:</strong> <%= table.capacity %></p>
-    <p><strong>Status:</strong> <%= table.status %></p>
-  </main>
-</div>
+  <div class="container">
+    <header class="header">
+      <h1>Table <%= table.table_number %></h1>
+      <nav aria-label="Table navigation">
+        <a href="/tables">Back to Tables</a>
+      </nav>
+    </header>
+    <main>
+      <p><strong>Capacity:</strong> <%= table.capacity %></p>
+      <p><strong>Status:</strong> <%= table.status.charAt(0).toUpperCase() + table.status.slice(1) %></p>
+    </main>
+  </div>
 </body>
 </html>

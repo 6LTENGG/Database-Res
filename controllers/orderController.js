@@ -26,8 +26,8 @@ exports.getOrderById = (req, res) => {
 
 // CREATE new order
 exports.createOrder = (req, res) => {
-  const orderData = req.body; // you may want to destructure fields here
-  Order.addOrder(orderData, (err) => {
+  const { table_id, order_details, total_amount } = req.body;
+  Order.addOrder(table_id, order_details, total_amount, (err) => {
     if (err) {
       console.error("Error creating order:", err);
       return res.status(500).send("Database error: " + err.message);
