@@ -1,54 +1,33 @@
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
 
-const tableController = require("./controllers/tableController");
-const orderController = require("./controllers/orderController");
+const tableRoutes = require('./routes/tableRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(express.urlencoded({ extended: true })); // parse form data
-app.use(express.json()); // parse JSON
-app.use(express.static(path.join(__dirname, "public")));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-// View engine setup
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes
-
-// Home page
-app.get("/", (req, res) => {
-  res.render("index");
+// Home - show members
+app.get('/', (req, res) => {
+  const members = [
+    "Tanatuch Terasunthornwat",
+    "Althea Mariz Lindugan",
+    "Manam Sut Jat Aung",
+    "Satayu Saengchan",
+    "Nattapong Ngamwiliai"
+  ];
+  res.render('index', { members });
 });
 
-// Tables routes
-app.get("/tables", tableController.showTables);
-app.post("/tables", tableController.createTable);               // <-- Added this line
-app.post("/tables/:id/status", tableController.updateTableStatusRedirect);
-app.post("/tables/:id/delete", tableController.deleteTable);
+app.use('/tables', tableRoutes);
+app.use('/orders', orderRoutes);
 
-// Orders routes
-app.get("/orders", orderController.showOrders);
-app.post("/orders", orderController.createOrder);
-app.post("/orders/:id/status", orderController.updateOrderStatusRedirect);
-app.post("/orders/:id/delete", orderController.deleteOrder);
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).send("Page not found");
-});
-
-// Error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something went wrong!");
-});
-
-// Start server
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));

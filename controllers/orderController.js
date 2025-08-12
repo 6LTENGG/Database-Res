@@ -1,61 +1,48 @@
-const Order = require("../models/orderModel");
+const Order = require('../models/Order');
+const Table = require('../models/Table');
 
-// READ all orders
-exports.showOrders = (req, res) => {
-  Order.getAllOrders((err, orders) => {
+exports.list = (req, res) => {
+  Order.getAll((err, orders) => {
     if (err) {
-      console.error("Error fetching orders:", err);
-      return res.status(500).send("Database error: " + err.message);
+      console.error(err);
+      return res.status(500).send('DB error');
     }
-    res.render("orders", { orders });
+    Table.getAll((err2, tables) => {
+      if (err2) {
+        console.error(err2);
+        return res.status(500).send('DB error');
+      }
+      res.render('orders', { orders, tables });
+    });
   });
 };
 
-// READ single order by ID
-exports.getOrderById = (req, res) => {
-  const orderId = req.params.id;
-  Order.getOrderById(orderId, (err, order) => {
+exports.create = (req, res) => {
+  Order.create(req.body, (err) => {
     if (err) {
-      console.error("Error fetching order:", err);
-      return res.status(500).send("Database error: " + err.message);
+      console.error(err);
+      return res.status(500).send('DB error');
     }
-    if (!order) return res.status(404).send("Order not found");
-    res.render("orderDetails", { order });
+    res.redirect('/orders');
   });
 };
 
-// CREATE new order
-exports.createOrder = (req, res) => {
-  const { table_id, order_details, total_amount } = req.body;
-  Order.addOrder(table_id, order_details, total_amount, (err) => {
+exports.update = (req, res) => {
+  Order.update(req.params.id, req.body, (err) => {
     if (err) {
-      console.error("Error creating order:", err);
-      return res.status(500).send("Database error: " + err.message);
+      console.error(err);
+      return res.status(500).send('DB error');
     }
-    res.redirect("/orders");
+    res.redirect('/orders');
   });
 };
 
-// UPDATE order status with redirect
-exports.updateOrderStatusRedirect = (req, res) => {
-  const orderId = req.params.id;
-  const newStatus = req.body.status;
-  Order.updateOrderStatus(orderId, newStatus, (err) => {
+exports.delete = (req, res) => {
+  Order.delete(req.params.id, (err) => {
     if (err) {
-      console.error("Error updating order status:", err);
-      return res.status(500).send("Database error: " + err.message);
+      console.error(err);
+      return res.status(500).send('DB error');
     }
-    res.redirect("/orders");
-  });
-};
-
-// DELETE order
-exports.deleteOrder = (req, res) => {
-  Order.deleteOrder(req.params.id, (err) => {
-    if (err) {
-      console.error("Error deleting order:", err);
-      return res.status(500).send("Database error: " + err.message);
-    }
-    res.redirect("/orders");
+    res.redirect('/orders');
   });
 };

@@ -1,79 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
+  <title>Manage Orders</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Orders - Thai Restaurant</title>
-  <link rel="stylesheet" href="/style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
-  <div class="container">
-    <header class="header">
-      <h1>Orders</h1>
-      <nav>
-        <a href="/">Home</a> | <a href="/tables">Tables</a>
-      </nav>
-    </header>
+<body class="bg-gray-100 min-h-screen">
+  <header class="bg-blue-600 text-white p-4 shadow-md flex justify-between items-center">
+    <h1 class="text-xl font-bold">📋 Orders</h1>
+    <div class="space-x-2">
+      <a href="/" class="bg-white text-gray-800 px-3 py-1 rounded">Home</a>
+      <a href="/tables" class="bg-white text-red-600 px-3 py-1 rounded">Tables</a>
+    </div>
+  </header>
 
-    <main>
-      <table class="modern-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Table</th>
-            <th>Details</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% orders.forEach(order => { %>
-            <tr>
-              <td data-label="ID"><%= order.order_id %></td>
-              <td data-label="Table"><%= order.table_number %></td>
-              <td data-label="Details"><%= order.order_details %></td>
-              <td data-label="Total">฿<%= order.total_amount %></td>
-              <td data-label="Status">
-                <span class="status <%= order.status %>"><%= order.status %></span>
-              </td>
-              <td data-label="Actions">
-                
+  <main class="max-w-6xl mx-auto p-6">
+    <form method="POST" action="/orders" class="bg-white p-4 rounded-xl shadow grid grid-cols-1 md:grid-cols-5 gap-3 mb-6">
+      <select name="table_id" required class="border p-2 rounded">
+        <% tables.forEach(table => { %>
+          <option value="<%= table.table_id %>">Table <%= table.table_number %> (cap <%= table.capacity %>)</option>
+        <% }) %>
+      </select>
 
-                <form method="POST" action="/orders/<%= order.order_id %>/status" class="status-form" style="display:inline-flex; align-items:center; gap: 0.5rem;">
-                  <select name="status" class="status-select">
-                    <option value="queued" <%= order.status === 'queued' ? 'selected' : '' %>>Queued</option>
-                    <option value="preparing" <%= order.status === 'preparing' ? 'selected' : '' %>>Preparing</option>
-                    <option value="ready" <%= order.status === 'ready' ? 'selected' : '' %>>Ready</option>
-                    <option value="served" <%= order.status === 'served' ? 'selected' : '' %>>Served</option>
-                    <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
-                  </select>
-                  <button type="submit" class="update-button">Update</button>
-                </form>
+      <input name="order_details" required placeholder="Order details (e.g. 1 Pad Thai, 2 Green Curry)" class="border p-2 rounded" />
+      <input name="total_amount" required type="number" step="0.01" placeholder="Total (THB)" class="border p-2 rounded" />
+      <select name="status" class="border p-2 rounded">
+        <option value="queued">queued</option>
+        <option value="preparing">preparing</option>
+        <option value="ready">ready</option>
+        <option value="served">served</option>
+        <option value="cancelled">cancelled</option>
+      </select>
 
-                <form method="POST" action="/orders/<%= order.order_id %>/delete" onsubmit="return confirm('Delete this order?');" style="display:inline;">
-                  <button type="submit" class="delete-button">Delete</button>
-                </form>
-              </td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
+      <button class="bg-green-500 text-white rounded px-4 py-2">Add Order</button>
+    </form>
 
-      <!-- Create Order -->
-      <section class="new-order">
-        <h2>Create New Order</h2>
-        <form method="POST" action="/orders" class="order-form">
-          <label>Table ID</label>
-          <input type="number" name="table_id" required />
-          <label>Order Details</label>
-          <textarea name="order_details" rows="3" required></textarea>
-          <label>Total Amount (฿)</label>
-          <input type="number" name="total_amount" step="0.01" required />
-          <button type="submit">Add Order</button>
-        </form>
-      </section>
-    </main>
-  </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <% orders.forEach(o => {
+        const color = o.status === 'queued' ? 'bg-gray-50 text-gray-800' :
+                      o.status === 'preparing' ? 'bg-yellow-50 text-yellow-800' :
+                      o.status === 'ready' ? 'bg-blue-50 text-blue-800' :
+                      o.status === 'served' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800';
+      %>
+        <div class="bg-white p-4 rounded-xl shadow">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="text-lg font-bold">Table <%= o.table_number || '(unknown)' %></h3>
+              <p class="text-sm text-gray-600">Order ID: <%= o.order_id %> — <%= new Date(o.created_at).toLocaleString() %></p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-sm font-medium <%= color %>"><%= o.status %></span>
+          </div>
+
+          <p class="mt-3"><strong>Details:</strong> <%= o.order_details %></p>
+          <p><strong>Total:</strong> ฿<%= Number(o.total_amount).toFixed(2) %></p>
+
+          <form method="POST" action="/orders/update/<%= o.order_id %>" class="mt-4 grid grid-cols-1 md:grid-cols-5 gap-2 items-center">
+            <select name="table_id" class="border p-1 rounded">
+              <% tables.forEach(table => { %>
+                <option value="<%= table.table_id %>" <%= table.table_id === o.table_id ? 'selected' : '' %>>Table <%= table.table_number %></option>
+              <% }) %>
+            </select>
+            <input name="order_details" value="<%= o.order_details %>" class="border p-1 rounded" />
+            <input name="total_amount" type="number" step="0.01" value="<%= o.total_amount %>" class="border p-1 rounded" />
+            <select name="status" class="border p-1 rounded">
+              <option value="queued" <%= o.status === 'queued' ? 'selected' : '' %>>queued</option>
+              <option value="preparing" <%= o.status === 'preparing' ? 'selected' : '' %>>preparing</option>
+              <option value="ready" <%= o.status === 'ready' ? 'selected' : '' %>>ready</option>
+              <option value="served" <%= o.status === 'served' ? 'selected' : '' %>>served</option>
+              <option value="cancelled" <%= o.status === 'cancelled' ? 'selected' : '' %>>cancelled</option>
+            </select>
+
+            <div class="flex space-x-2">
+              <button class="bg-yellow-500 text-white px-3 py-1 rounded">Update</button>
+              <a href="/orders/delete/<%= o.order_id %>" onclick="return confirm('Delete order?')" class="bg-red-500 text-white px-3 py-1 rounded">Delete</a>
+            </div>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+  </main>
+
+  <script src="/script.js"></script>
 </body>
 </html>

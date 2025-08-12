@@ -1,73 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
+  <title>Manage Tables</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tables - Thai Restaurant</title>
-  <link rel="stylesheet" href="/style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
-  <div class="container">
-    <header class="header">
-      <h1>Tables</h1>
-      <nav aria-label="Main navigation">
-        <a href="/">Home</a> | <a href="/orders">Orders</a>
-      </nav>
-    </header>
+<body class="bg-gray-100 min-h-screen">
+  <header class="bg-red-600 text-white p-4 shadow-md flex justify-between items-center">
+    <h1 class="text-xl font-bold">🍽️ Tables</h1>
+    <div class="space-x-2">
+      <a href="/" class="bg-white text-red-600 px-3 py-1 rounded">Home</a>
+      <a href="/orders" class="bg-white text-blue-600 px-3 py-1 rounded">Orders</a>
+    </div>
+  </header>
 
-    <main>
-      <table class="modern-table">
-        <thead>
-          <tr>
-            <th>Number</th>
-            <th>Capacity</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% tables.forEach(table => { %>
-            <tr>
-              <td data-label="Number"><%= table.table_number %></td>
-              <td data-label="Capacity"><%= table.capacity %></td>
-              <td data-label="Status">
-                <span class="status <%= table.status %>"><%= table.status.charAt(0).toUpperCase() + table.status.slice(1) %></span>
-              </td>
-              <td data-label="Actions">
-                <form method="POST" action="/tables/<%= table.table_id %>/status" class="status-form" style="display:inline-flex; align-items:center; gap: 0.5rem;">
-                  <label for="status-<%= table.table_id %>" class="sr-only">Update table status</label>
-                  <select id="status-<%= table.table_id %>" name="status" class="status-select">
-                    <option value="available" <%= table.status === 'available' ? 'selected' : '' %>>Available</option>
-                    <option value="occupied" <%= table.status === 'occupied' ? 'selected' : '' %>>Occupied</option>
-                    <option value="reserved" <%= table.status === 'reserved' ? 'selected' : '' %>>Reserved</option>
-                  </select>
-                  <button type="submit" class="update-button">Update</button>
-                </form>
+  <main class="max-w-6xl mx-auto p-6">
+    <form method="POST" action="/tables" class="bg-white p-4 rounded-xl shadow grid grid-cols-1 md:grid-cols-4 gap-3 mb-6">
+      <input name="table_number" required placeholder="Table Number" class="border p-2 rounded" />
+      <input name="capacity" required type="number" placeholder="Capacity" class="border p-2 rounded" />
+      <select name="status" class="border p-2 rounded">
+        <option value="available">available</option>
+        <option value="occupied">occupied</option>
+        <option value="reserved">reserved</option>
+      </select>
+      <button class="bg-green-500 text-white rounded px-4 py-2">Add Table</button>
+    </form>
 
-                <form method="POST" action="/tables/<%= table.table_id %>/delete" onsubmit="return confirm('Delete this table?');" style="display:inline;">
-                  <button type="submit" class="delete-button">Delete</button>
-                </form>
-              </td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <% tables.forEach(t => {
+        const color = t.status === 'available' ? 'bg-green-50 text-green-800' :
+                      t.status === 'occupied' ? 'bg-yellow-50 text-yellow-800' : 'bg-blue-50 text-blue-800';
+      %>
+        <div class="bg-white p-4 rounded-xl shadow flex flex-col justify-between">
+          <div>
+            <h2 class="text-lg font-bold">Table <%= t.table_number %></h2>
+            <p class="text-sm text-gray-600">Capacity: <%= t.capacity %></p>
+            <span class="mt-3 inline-block px-3 py-1 rounded-full text-xs font-medium <%= color %>"><%= t.status %></span>
+          </div>
 
-      <!-- Create Table -->
-      <section class="new-order">
-        <h2>Create New Table</h2>
-        <form method="POST" action="/tables" class="order-form">
-          <label for="table_number">Table Number</label>
-          <input type="text" id="table_number" name="table_number" required />
-          
-          <label for="capacity">Capacity</label>
-          <input type="number" id="capacity" name="capacity" min="1" required />
-          
-          <button type="submit">Add Table</button>
-        </form>
-      </section>
-    </main>
-  </div>
+          <form method="POST" action="/tables/update/<%= t.table_id %>" class="mt-4 space-y-2">
+            <input name="table_number" value="<%= t.table_number %>" required class="w-full border p-2 rounded" />
+            <input name="capacity" value="<%= t.capacity %>" required type="number" class="w-full border p-2 rounded" />
+            <select name="status" class="w-full border p-2 rounded">
+              <option value="available" <%= t.status === 'available' ? 'selected' : '' %>>available</option>
+              <option value="occupied" <%= t.status === 'occupied' ? 'selected' : '' %>>occupied</option>
+              <option value="reserved" <%= t.status === 'reserved' ? 'selected' : '' %>>reserved</option>
+            </select>
+
+            <div class="flex justify-between">
+              <button class="bg-yellow-500 text-white px-3 py-1 rounded">Update</button>
+              <a href="/tables/delete/<%= t.table_id %>" onclick="return confirm('Delete table?')" class="bg-red-500 text-white px-3 py-1 rounded">Delete</a>
+            </div>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+  </main>
+
+  <script src="/script.js"></script>
 </body>
 </html>
-        

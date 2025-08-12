@@ -1,47 +1,41 @@
-// controllers/tableController.js
-const Table = require("../models/tableModel");
+const Table = require('../models/Table');
 
-exports.showTables = (req, res) => {
-  Table.getAllTables((err, tables) => {
+exports.list = (req, res) => {
+  Table.getAll((err, tables) => {
     if (err) {
-      console.error("Error fetching tables:", err);
-      return res.status(500).send("Database error: " + err.message);
+      console.error(err);
+      return res.status(500).send('DB error');
     }
-    res.render("tables", { tables });
+    res.render('tables', { tables });
   });
 };
 
-exports.createTable = (req, res) => {
-  const { table_number, capacity } = req.body;
-  console.log("Received create table:", req.body);  // Debug log
-  Table.addTable(table_number, capacity, (err) => {
+exports.create = (req, res) => {
+  Table.create(req.body, (err) => {
     if (err) {
-      console.error("Error creating table:", err);
-      return res.status(500).send("Database error: " + err.message);
+      console.error(err);
+      return res.status(500).send('DB error');
     }
-    res.redirect("/tables");
+    res.redirect('/tables');
   });
 };
 
-exports.updateTableStatusRedirect = (req, res) => {
-  const tableId = req.params.id;
-  const newStatus = req.body.status;
-  Table.updateTableStatus(tableId, newStatus, (err) => {
+exports.update = (req, res) => {
+  Table.update(req.params.id, req.body, (err) => {
     if (err) {
-      console.error("Error updating table status:", err);
-      return res.status(500).send("Database error: " + err.message);
+      console.error(err);
+      return res.status(500).send('DB error');
     }
-    res.redirect("/tables");
+    res.redirect('/tables');
   });
 };
 
-exports.deleteTable = (req, res) => {
-  const tableId = req.params.id;
-  Table.deleteTable(tableId, (err) => {
+exports.delete = (req, res) => {
+  Table.delete(req.params.id, (err) => {
     if (err) {
-      console.error("Error deleting table:", err);
-      return res.status(500).send("Database error: " + err.message);
+      console.error(err);
+      return res.status(500).send('DB error');
     }
-    res.redirect("/tables");
+    res.redirect('/tables');
   });
 };
