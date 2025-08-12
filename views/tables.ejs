@@ -19,40 +19,53 @@
       <table class="modern-table">
         <thead>
           <tr>
-            <th>Table Number</th>
+            <th>Number</th>
             <th>Capacity</th>
             <th>Status</th>
-            <th>Update Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <% tables.forEach(table => { %>
             <tr>
-              <td><%= table.table_number %></td>
-              <td><%= table.capacity %></td>
-              <td>
-                <span class="status <%= table.status %>"><%= table.status.charAt(0).toUpperCase() + table.status.slice(1) %></span>
+              <td data-label="Number"><%= table.table_number %></td>
+              <td data-label="Capacity"><%= table.capacity %></td>
+              <td data-label="Status">
+                <span class="status <%= table.status %>"><%= table.status %></span>
               </td>
-              <td>
-                <form method="POST" action="/tables/<%= table.table_id %>/status" class="status-form">
-                  <select name="status" required>
-                    <option value="" disabled>Select</option>
+              <td data-label="Actions">
+                
+
+                <form method="POST" action="/tables/<%= table.table_id %>/status" class="status-form" style="display:inline-flex; align-items:center; gap: 0.5rem;">
+                  <select name="status" class="status-select">
                     <option value="available" <%= table.status === 'available' ? 'selected' : '' %>>Available</option>
                     <option value="occupied" <%= table.status === 'occupied' ? 'selected' : '' %>>Occupied</option>
                     <option value="reserved" <%= table.status === 'reserved' ? 'selected' : '' %>>Reserved</option>
                   </select>
-                  <button type="submit">Update</button>
+                  <button type="submit" class="update-button">Update</button>
+                </form>
+
+                <form method="POST" action="/tables/<%= table.table_id %>/delete" onsubmit="return confirm('Delete this table?');" style="display:inline;">
+                  <button type="submit" class="delete-button">Delete</button>
                 </form>
               </td>
             </tr>
           <% }) %>
         </tbody>
       </table>
-    </main>
 
-    <footer class="footer">
-      <p>&copy; <%= new Date().getFullYear() %> Thai Restaurant | Made with ❤️</p>
-    </footer>
+      <!-- Create Table -->
+      <section class="new-order">
+        <h2>Create New Table</h2>
+        <form method="POST" action="/tables" class="order-form">
+          <label>Table Number</label>
+          <input type="text" name="table_number" required />
+          <label>Capacity</label>
+          <input type="number" name="capacity" required />
+          <button type="submit">Add Table</button>
+        </form>
+      </section>
+    </main>
   </div>
 </body>
 </html>

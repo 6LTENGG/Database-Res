@@ -2,33 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Thai Restaurant - Home</title>
+  <title>Thai Restaurant</title>
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
   <div class="container">
     <header class="header">
-      <h1>🍜 Thai Restaurant</h1>
-      <p class="tagline">Authentic flavors, warm atmosphere</p>
+      <h1>Welcome to Thai Restaurant Management</h1>
+      <nav>
+        <a href="/orders">Orders</a> | <a href="/tables">Tables</a>
+      </nav>
     </header>
 
-    <main>
-      <div class="card-grid">
-        <a href="/tables" class="card">
-          <h2>View Tables</h2>
-          <p>Check table availability & status</p>
-        </a>
-        <a href="/orders" class="card">
-          <h2>View Orders</h2>
-          <p>Manage customer orders</p>
-        </a>
-      </div>
-    </main>
-
-    <footer class="footer">
-      <p>&copy; <%= new Date().getFullYear() %> Thai Restaurant | Made with ❤️</p>
-    </footer>
+    <section class="team-section new-order">
+      <h2>Team Members</h2>
+      <ul class="team-list">
+        <li>Tanatuch Terasunthornwat</li>
+        <li>Althea Mariz Lindugan</li>
+        <li>Manam Sut Jat Aung</li>
+        <li>Satayu Saengchan</li>
+        <li>Nattapong Ngamwiliai</li>
+      </ul>
+    </section>
   </div>
 </body>
 </html>

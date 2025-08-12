@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order Details</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <h1>Order #<%= order.order_id %></h1>
+    <nav>
+      <a href="/orders">Back to Orders</a>
+    </nav>
+  </header>
+  <main>
+    <p><strong>Table:</strong> <%= order.table_number %></p>
+    <p><strong>Details:</strong> <%= order.order_details %></p>
+    <p><strong>Total:</strong> ฿<%= order.total_amount %></p>
+    <p><strong>Status:</strong> <%= order.status %></p>
+    <p><strong>Created:</strong> <%= order.created_at.toLocaleString() %></p>
+  </main>
+</div>
+</body>
+</html>
+    <h2>Create New Order</h2>
+    <form method="POST" action="/orders" class="order-form">
+      <label>Table Number</label>
+      <input type="text" name="table_number" required />
+      <label>Order Details</label>
+      <textarea name="order_details" required></textarea>
+      <label>Total Amount</label>
+      <input type="number" name="total_amount" required />
+      <button type="submit">Create Order</button>
+    </form>
+  </main>

@@ -1,47 +1,56 @@
 const db = require("../config/db.js");
 
-// Get all orders
-exports.getAllOrders = (callback) => {
-  // Joining tables table_number for better info
-  const query = `
-    SELECT o.*, t.table_number 
-    FROM orders o
-    JOIN tables t ON o.table_id = t.table_id
-    ORDER BY o.created_at DESC
-  `;
-  db.query(query, (err, results) => {
-    if (err) return callback(err);
-    callback(null, results);
-  });
+const Order = {
+  // READ all
+  getAllOrders: (callback) => {
+    // Joining tables table_number for display
+    const query = `
+      SELECT orders.*, tables.table_number 
+      FROM orders 
+      JOIN tables ON orders.table_id = tables.table_id 
+      ORDER BY orders.created_at DESC
+    `;
+    db.query(query, callback);
+  },
+
+  // CREATE
+  addOrder: (table_id, order_details, total_amount, callback) => {
+    if (!table_id || !order_details || !total_amount) {
+      return callback(new Error("Missing required fields"));
+    }
+    const sql = `INSERT INTO orders (table_id, order_details, total_amount) VALUES (?, ?, ?)`;
+    db.query(sql, [table_id, order_details, total_amount], callback);
+  },
+
+  // READ single
+  getOrderById: (id, callback) => {
+    if (!id) return callback(new Error("Missing order ID"));
+    const sql = `
+      SELECT orders.*, tables.table_number 
+      FROM orders 
+      JOIN tables ON orders.table_id = tables.table_id 
+      WHERE orders.order_id = ?
+    `;
+    db.query(sql, [id], (err, results) => {
+      if (err) return callback(err);
+      callback(null, results[0]);
+    });
+  },
+
+  // UPDATE status
+  updateOrderStatus: (orderId, status, callback) => {
+    if (!orderId || !status) {
+      return callback(new Error("Missing required fields"));
+    }
+    const sql = `UPDATE orders SET status = ? WHERE order_id = ?`;
+    db.query(sql, [status, orderId], callback);
+  },
+
+  // DELETE
+  deleteOrder: (id, callback) => {
+    if (!id) return callback(new Error("Missing order ID"));
+    db.query("DELETE FROM orders WHERE order_id = ?", [id], callback);
+  }
 };
 
-// Add a new order
-exports.addOrder = (table_id, details, amount, callback) => {
-  if (table_id == null || details == null || amount == null) {
-    return callback(new Error("Missing required fields"));
-  }
-  db.query(
-    "INSERT INTO orders (table_id, order_details, total_amount) VALUES (?, ?, ?)",
-    [table_id, details, amount],
-    (err, result) => {
-      if (err) return callback(err);
-      callback(null, result);
-    }
-  );
-};
-
-// Update order status
-exports.updateOrderStatus = (id, status, callback) => {
-  if (!id || !status) {
-    return callback(new Error("Missing required fields"));
-  }
-  db.query(
-    "UPDATE orders SET status = ? WHERE order_id = ?",
-    [status, id],
-    (err, result) => {
-      if (err) return callback(err);
-      callback(null, result);
-    }
-  );
-};
-// Get order by ID
+module.exports = Order;
