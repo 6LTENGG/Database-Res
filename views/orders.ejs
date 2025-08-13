@@ -44,7 +44,7 @@
                       o.status === 'ready' ? 'bg-blue-50 text-blue-800' :
                       o.status === 'served' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800';
       %>
-        <div class="bg-white p-4 rounded-xl shadow">
+        <div class="bg-white p-20 rounded-xl shadow">
           <div class="flex justify-between items-start">
             <div>
               <h3 class="text-lg font-bold">Table <%= o.table_number || '(unknown)' %></h3>
@@ -72,11 +72,13 @@
               <option value="cancelled" <%= o.status === 'cancelled' ? 'selected' : '' %>>cancelled</option>
             </select>
 
-            <div class="flex space-x-2">
+            <!-- Buttons: span all 5 columns -->
+            <div class="flex space-x-2 md:col-span-5 mt-2">
               <button class="bg-yellow-500 text-white px-3 py-1 rounded">Update</button>
               <a href="/orders/delete/<%= o.order_id %>" onclick="return confirm('Delete order?')" class="bg-red-500 text-white px-3 py-1 rounded">Delete</a>
             </div>
           </form>
+
         </div>
       <% }) %>
     </div>

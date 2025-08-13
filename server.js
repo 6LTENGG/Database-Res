@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
     "Althea Mariz Lindugan",
     "Manam Sut Jat Aung",
     "Satayu Saengchan",
-    "Nattapong Ngamwiliai"
+    "Nattapong Ngamwiliaipan"
   ];
   res.render('index', { members });
 });
